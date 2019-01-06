@@ -7,6 +7,8 @@ const async = require("async");
 const model = require("../../models");
 const { auth, admin } = require("../../middleware");
 
+const sendMail = require("../../mail");
+
 const router = express.Router();
 
 router.get("/auth", auth, (req, res) => {
@@ -28,7 +30,10 @@ router.post("/register", async (req, res) => {
 
     if (!user) return res.json({ success: false });
 
-    res.status(200).json({ success: true });
+    // Send Welcome mail to registered user
+    sendMail(user.email, user.firstName, null, "welcome");
+
+    return res.status(200).json({ success: true });
   } catch (err) {
     console.log("Register Error: ", err.message);
     return res.json({ success: false, errors: err.message });

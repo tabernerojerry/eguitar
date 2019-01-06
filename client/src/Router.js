@@ -17,6 +17,8 @@ import UserCart from "./components/User/UserCart";
 import UpdateProfile from "./components/User/UpdateProfile";
 import ManageSite from "./components/User/Admin/ManageSite";
 
+import NotFound from "./components/NotFound";
+
 class Router extends Component {
   render() {
     return (
@@ -57,6 +59,8 @@ class Router extends Component {
 
             <Route exact path="/login" component={Auth(RegisterLogin, false)} />
             <Route exact path="/register" component={Auth(Register, false)} />
+
+            <Route component={Auth(NotFound)} />
           </Switch>
         </Layout>
       </BrowserRouter>
