@@ -1,8 +1,10 @@
 const mailer = require("nodemailer");
 
 const welcome = require("./welcome_template");
+const purchase = require("./purchase_template");
+const resetPassword = require("./resetpassword_template");
 
-const getEmailData = (to, name, token, template) => {
+const getEmailData = (to, name, token, template, actionData) => {
   let data = null;
 
   switch (template) {
@@ -14,6 +16,22 @@ const getEmailData = (to, name, token, template) => {
         html: welcome()
       };
       break;
+    case "purchase":
+      data = {
+        from: "EWaves <yellowflash717@gmail.com>",
+        to,
+        subject: `Thanks for shopping with us ${name}`,
+        html: purchase(actionData)
+      };
+      break;
+    case "reset_password":
+      data = {
+        from: "EWaves <yellowflash717@gmail.com>",
+        to,
+        subject: `Hey ${name}, reset your password`,
+        html: resetPassword(actionData)
+      };
+      break;
     default:
       data;
   }
@@ -21,7 +39,7 @@ const getEmailData = (to, name, token, template) => {
   return data;
 };
 
-const sendMail = (to, name, token, type) => {
+const sendMail = (to, name, token, type, actionData = null) => {
   const smtpTransport = mailer.createTransport({
     service: "Gmail",
     auth: {
@@ -30,7 +48,7 @@ const sendMail = (to, name, token, type) => {
     }
   });
 
-  const mail = getEmailData(to, name, token, type);
+  const mail = getEmailData(to, name, token, type, actionData);
 
   smtpTransport.sendMail(mail, (err, res) => {
     if (err) {

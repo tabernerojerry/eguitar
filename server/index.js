@@ -11,8 +11,12 @@ const brands = require("./routes/api/brands");
 const woods = require("./routes/api/woods");
 const products = require("./routes/api/product");
 const site = require("./routes/api/site");
+const path = require("path");
 
 const app = express();
+
+// Static Express Middleware
+app.use("/static", express.static(path.join(__dirname, "uploads")));
 
 // Middleware
 app.use(bodyParser.json());
@@ -26,9 +30,6 @@ cloudinary.config({
   api_key: CLOUD_API_KEY,
   api_secret: CLOUD_API_SECRET
 });
-
-// Nodemailer
-
 
 /**
  * API Routes

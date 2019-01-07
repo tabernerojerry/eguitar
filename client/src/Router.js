@@ -16,8 +16,11 @@ import ManageCategories from "./components/User/Admin/ManageCategories";
 import UserCart from "./components/User/UserCart";
 import UpdateProfile from "./components/User/UpdateProfile";
 import ManageSite from "./components/User/Admin/ManageSite";
+import AddFile from "./components/User/Admin/AddFile";
+import ResetUser from "./components/ResetUser";
 
 import NotFound from "./components/NotFound";
+import ResetPassword from "./components/ResetUser/ResetPassword";
 
 class Router extends Component {
   render() {
@@ -52,6 +55,11 @@ class Router extends Component {
               path="/admin/site_info"
               component={Auth(ManageSite, true)}
             />
+            <Route
+              exact
+              path="/admin/add_file"
+              component={Auth(AddFile, true)}
+            />
 
             <Route exact path="/" component={Auth(Home, null)} />
             <Route exact path="/shop" component={Auth(Shop, null)} />
@@ -59,6 +67,16 @@ class Router extends Component {
 
             <Route exact path="/login" component={Auth(RegisterLogin, false)} />
             <Route exact path="/register" component={Auth(Register, false)} />
+            <Route
+              exact
+              path="/reset_user"
+              component={Auth(ResetUser, false)}
+            />
+            <Route
+              exact
+              path="/reset_password/:token"
+              component={Auth(ResetPassword, false)}
+            />
 
             <Route component={Auth(NotFound)} />
           </Switch>

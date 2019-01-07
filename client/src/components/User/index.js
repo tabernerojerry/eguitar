@@ -20,7 +20,7 @@ const UserDashboard = ({ user }) => (
           linkTo="/user/profile"
         />
       </div>
-      {user.userData && user.userData.history > 0 ? (
+      {user.userData && user.userData.history ? (
         <div className="user_nfo_panel">
           <h1>History of Purchases</h1>
           <div className="user_product_block_wrapper">

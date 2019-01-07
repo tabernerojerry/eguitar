@@ -63,7 +63,6 @@ export class Login extends Component {
     if (formValid) {
       this.props.dispatch(userLogin(dataToSubmit)).then(res => {
         if (res.payload.success) {
-          console.log(res.payload);
           this.props.history.push("/user/dashboard");
         } else {
           this.setState({ formError: true });
@@ -95,6 +94,12 @@ export class Login extends Component {
           )}
 
           <button onClick={this.submitForm}>Log In</button>
+          <button
+            style={{ marginLeft: "10px" }}
+            onClick={() => this.props.history.push("/reset_user")}
+          >
+            Forgot Password
+          </button>
         </form>
       </div>
     );

@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
+const moment = require("moment");
 
 const UserSchema = new mongoose.Schema({
   email: {
@@ -42,15 +44,21 @@ const UserSchema = new mongoose.Schema({
   },
   token: {
     type: String
+  },
+  resetToken: {
+    type: String
+  },
+  resetTokenExp: {
+    type: Number
   }
 });
 
 // Hash the password before save
-UserSchema.pre("save", async function() {
-  if (this.isModified("password")) {
-    this.password = await bcrypt.hash(this.password, 10);
-  }
-});
+// UserSchema.pre("save", async function() {
+//   if (this.isModified("password")) {
+//     this.password = await bcrypt.hash(this.password, 10);
+//   }
+// });
 
 UserSchema.statics.doesntExist = async function(options) {
   return (await this.where(options).countDocuments()) === 0;
@@ -58,6 +66,38 @@ UserSchema.statics.doesntExist = async function(options) {
 
 UserSchema.methods.matchPassword = async function(password) {
   return await bcrypt.compare(password, this.password);
+};
+
+UserSchema.methods.generateResetToken = async function(email) {
+  try {
+    const buffer = crypto.randomBytes(20);
+
+    // set token
+    const token = buffer.toString("hex");
+
+    const today = moment()
+      .startOf("day")
+      .valueOf();
+
+    // set token expire 1 day
+    const tomorrow = moment(today)
+      .endOf("day")
+      .valueOf();
+
+    const data = await User.findOneAndUpdate(
+      { email },
+      { resetToken: token, resetTokenExp: tomorrow },
+      { new: true }
+    );
+
+    if (!data) {
+      console.log("Error Reset token!");
+    }
+
+    return data.resetToken;
+  } catch (err) {
+    console.log("Reset Error:", err);
+  }
 };
 
 UserSchema.methods.generateToken = async function() {
